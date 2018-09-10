@@ -44,8 +44,9 @@ const DIRECTORIES = {
 }
 
 class Ignitor {
-  constructor (fold) {
+  constructor (fold, ext = 'js') {
     this._fold = fold
+    this._ext = ext
     this._appRoot = null
     this._modulesRoot = null
     this._loadCommands = false
@@ -81,7 +82,7 @@ class Ignitor {
      *
      * @type {String}
      */
-    this._appFile = 'start/app.js'
+    this._appFile = `start/app.${this._ext}`
 
     /**
      * Ws server reference to run it
@@ -114,7 +115,7 @@ class Ignitor {
    */
   _getMatchingIndex (fileToMatch) {
     for (let file of this._preLoadFiles) {
-      if (file === fileToMatch || `${file}.js` === fileToMatch) {
+      if (file === fileToMatch || `${file}.${this._ext}` === fileToMatch) {
         return this._preLoadFiles.indexOf(file)
       }
     }
@@ -341,7 +342,7 @@ class Ignitor {
    * @private
    */
   _fileExists (filePath) {
-    filePath = path.extname(filePath) ? filePath : `${filePath}.js`
+    filePath = path.extname(filePath) ? filePath : `${filePath}.${this._ext}`
 
     try {
       fs.accessSync(filePath, fs.constants.R_OK)
@@ -390,9 +391,9 @@ class Ignitor {
    * @private
    */
   _loadHooksFileIfAny () {
-    const filePath = path.join(this._appRoot, 'start/hooks.js')
+    const filePath = path.join(this._appRoot, `start/hooks.${this._ext}`)
     if (this._fileExists(filePath)) {
-      require(path.join(this._appRoot, 'start/hooks.js'))
+      require(path.join(this._appRoot, `start/hooks.${this._ext}`))
     }
   }
 
